@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag and Drop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="logo-container">
+        <img src='Logo.svg' alt="Company Logo" class="logo">
+      </div>
+    <h1 style="margin-left: 640px;color:#681fc9;">Drag-and-Drop</h1>
+    
+  <table>
+    <tbody>
+      <tr>
+        <td>
+            <div class="box" draggable="true" id="box1" style="background-color: #ff5733">100</div>
+        </td>
+        <td>
+            <div class="box" draggable="true" id="box2" style="background-color: #33ff57">200</div>
+        </td>
+        <td>
+            <div class="box" draggable="true" id="box3" style="background-color: #3357ff">300</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <div class="box" draggable="true" id="box4" style="background-color: #ff33a1">400</div>
+        </td>
+        <td>
+            <div class="box" draggable="true" id="box5" style="background-color: #a133ff">500</div>
+        </td>
+        <td>
+            <div class="box" draggable="true" id="box6" style="background-color: #33f0ff">600</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <div class="box" draggable="true" id="box7" style="background-color: #ffd433">700</div>
+        </td>
+        <td>
+            <div class="box" draggable="true" id="box8" style="background-color: #ff8f33">800</div>
+        </td>
+        <td>
+            <div class="box" draggable="true" id="box9" style="background-color: #75ff33">900</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- buttons for adding  -->
+  <div class="controls">
+    <button id="addRowBtn">Add Row</button>
+    <button id="undoBtn">Undo</button>
+    <button id="redoBtn">Redo</button>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
