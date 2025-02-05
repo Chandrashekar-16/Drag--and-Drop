@@ -18,7 +18,6 @@ class Command {
   undo() {}
   redo() {}
 }
-
 class AddRowCommand extends Command {
   constructor() {
     super();
@@ -31,7 +30,7 @@ class AddRowCommand extends Command {
       const cell = document.createElement('td');
       const box = document.createElement('div');
       boxNumber += 100;
-      box.textContent =boxNumber;
+      box.textContent = boxNumber;
       box.classList.add('box');
       box.style.backgroundColor = colors[boxNumber % colors.length];
       box.setAttribute('draggable', 'true');
@@ -47,7 +46,8 @@ class AddRowCommand extends Command {
       this.rowElement.style.opacity = '1';
     }, 0);
 
-    registerDragEvents();
+    // Register events only for new row
+    this.registerEventsForNewRow();
   }
 
   undo() {
@@ -70,7 +70,51 @@ class AddRowCommand extends Command {
       this.rowElement.style.opacity = '1';
     }, 0);
 
-    registerDragEvents();
+    this.registerEventsForNewRow();
+  }
+  //  newly added code as i found this redo function is storing previous eventlistner values also
+  //   so the swapcommand runnedd two times and it didnt work 
+
+  registerEventsForNewRow() {
+    this.rowElement.querySelectorAll('.box').forEach(box => {
+      box.addEventListener('dragstart', event => {
+        draggedBox = event.target;
+        sourceCell = draggedBox.parentElement;
+        setTimeout(() => {
+          draggedBox.style.visibility = 'hidden'; 
+        }, 0);
+      });
+
+      box.addEventListener('dragend', () => {
+        setTimeout(() => {
+          draggedBox.style.visibility = 'visible'; 
+          draggedBox = null;
+          sourceCell = null;
+        }, 0);
+      });
+    });
+    
+
+    this.rowElement.querySelectorAll('td').forEach(cell => {
+    //Previously document.querySelectorAll which gets all the .box elements now we are selecting only newly added rows 
+      cell.addEventListener('dragover', event => {
+        event.preventDefault();
+      });
+
+      cell.addEventListener('drop', event => {
+        event.preventDefault();
+        const targetCell = event.target.tagName === 'TD' ? event.target : event.target.parentElement;
+
+        if (draggedBox && targetCell !== sourceCell) {
+          const destinationBox = targetCell.querySelector('.box');
+
+          if (destinationBox) {
+            const command = new SwapingCommand(sourceCell, targetCell);
+            executeCommand(command);
+          }
+        }
+      });
+    });
   }
 }
 
@@ -81,6 +125,7 @@ class SwapingCommand extends Command {
     this.targetCell = targetCell;
     this.sourceBoxValue = sourceCell.querySelector('.box').textContent;
     this.targetBoxValue = targetCell.querySelector('.box').textContent;
+    console.log("swapping command called ")
   }
 // for swapping of values
   execute() {
@@ -97,7 +142,9 @@ class SwapingCommand extends Command {
 
   swapValues() {
     const sourceBox = this.sourceCell.querySelector('.box');
+    
     const destinationBox = this.targetCell.querySelector('.box');
+    console.log("valuescheck@",sourceBox,destinationBox)
  //smooth transition by adding animation to boxes
     if (sourceBox && destinationBox) {
      
@@ -156,6 +203,7 @@ function registerDragEvents() {
         if (destinationBox) {
           // smooth transition when moving the objectss
           const command = new SwapingCommand(sourceCell, targetCell);
+          console.log("command@206",command)
           executeCommand(command);
 
           // transition effect after swap has done 
